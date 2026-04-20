@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jatin — Full-Stack Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #0f0f18;
+      --bg3: #14141f;
+      --surface: #1a1a28;
+      --surface2: #22223a;
+      --border: rgba(120, 120, 200, 0.12);
+      --border2: rgba(120, 120, 200, 0.22);
+      --accent: #6366f1;
+      --accent2: #818cf8;
+      --accent3: #94a3b8;
+      --green: #6ee7b7;
+      --pink: #94a3b8;
+      --text: #e8e8f0;
+      --text2: #9999bb;
+      --text3: #55557a;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: exclusion;
+    }
+
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(124, 109, 250, 0.6);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease, width 0.2s, height 0.2s, border-color 0.2s;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text2);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent2);
+    }
+
+    .nav-cta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      color: var(--text);
+      text-decoration: none;
+      transition: all 0.2s;
+      background: transparent;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Hero */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 70vw;
+      height: 70vw;
+      max-width: 900px;
+      background: radial-gradient(ellipse, rgba(124, 109, 250, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-glow2 {
+      position: absolute;
+      bottom: -20%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      max-width: 600px;
+      background: radial-gradient(ellipse, rgba(56, 189, 248, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--green);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      letter-spacing: 0.08em;
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 2s ease infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.3
+      }
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      animation: fadeInUp 0.6s 0.1s ease both;
+    }
+
+    .hero-name .accent-word {
+      color: var(--accent2);
+    }
+
+    .hero-title {
+      font-family: var(--font-mono);
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      color: var(--accent3);
+      margin-top: 1.5rem;
+      letter-spacing: 0.05em;
+      animation: fadeInUp 0.6s 0.2s ease both;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text2);
+      line-height: 1.7;
+      max-width: 560px;
+      margin-top: 1.5rem;
+      animation: fadeInUp 0.6s 0.3s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.6s 0.4s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: none;
+      transition: all 0.2s;
+      box-shadow: 0 0 40px rgba(124, 109, 250, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent2);
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(124, 109, 250, 0.5);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 2rem;
+      background: transparent;
+      color: var(--text2);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: none;
+      transition: all 0.2s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: var(--text3);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      animation: fadeInUp 0.6s 0.5s ease both;
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.04em;
+    }
+
+    .stat-num span {
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+      letter-spacing: 0.06em;
+      margin-top: 0.2rem;
+    }
+
+    /* Scroll ticker */
+    .ticker {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-inner {
+      display: inline-flex;
+      gap: 0;
+      animation: ticker 30s linear infinite;
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      padding: 0 2.5rem;
+    }
+
+    .ticker-item .dot {
+      color: var(--accent);
+      font-size: 0.5rem;
+    }
+
+    @keyframes ticker {
+      0% {
+        transform: translateX(0)
+      }
+
+      100% {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* Sections common */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 3rem;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1.05;
+    }
+
+    /* About / Skills */
+    #about {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      margin-top: 3.5rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--text2);
+      line-height: 1.8;
+      font-size: 0.98rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .about-text p strong {
+      color: var(--text);
+    }
+
+    .skills-group {
+      margin-top: 0.5rem;
+    }
+
+    .skills-group+.skills-group {
+      margin-top: 2rem;
+    }
+
+    .skills-group-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text3);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.85rem;
+    }
+
+    .skills-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      background: var(--surface);
+      transition: all 0.2s;
+      letter-spacing: 0.04em;
+    }
+
+    .pill:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      background: rgba(124, 109, 250, 0.08);
+    }
+
+    .pill.highlight {
+      border-color: rgba(124, 109, 250, 0.35);
+      color: var(--accent2);
+      background: rgba(124, 109, 250, 0.1);
+    }
+
+    /* Experience */
+    #experience {
+      background: var(--bg);
+    }
+
+    .exp-timeline {
+      margin-top: 3.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1px 1fr;
+      gap: 0 2.5rem;
+      padding-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .exp-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .exp-date {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text3);
+      letter-spacing: 0.05em;
+      padding-top: 0.25rem;
+      text-align: right;
+    }
+
+    .exp-line-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .exp-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 12px var(--accent);
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+
+    .exp-connector {
+      flex: 1;
+      width: 1px;
+      background: var(--border);
+      margin-top: 0.5rem;
+    }
+
+    .exp-item:last-child .exp-connector {
+      display: none;
+    }
+
+    .exp-content {
+      padding-bottom: 0.5rem;
+    }
+
+    .exp-role {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .exp-company {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent3);
+      margin-top: 0.25rem;
+      letter-spacing: 0.04em;
+    }
+
+    .exp-desc {
+      color: var(--text2);
+      font-size: 0.9rem;
+      line-height: 1.75;
+      margin-top: 0.85rem;
+    }
+
+    .exp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .exp-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 3px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text3);
+      letter-spacing: 0.04em;
+    }
+
+    /* Projects */
+    #projects {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(124, 109, 250, 0.06) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .project-card:hover {
+      border-color: rgba(124, 109, 250, 0.35);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .project-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(124, 109, 250, 0.12);
+      border: 1px solid rgba(124, 109, 250, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .project-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .project-link {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      cursor: none;
+    }
+
+    .project-link:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .project-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .stack-tag {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: var(--accent3);
+      letter-spacing: 0.04em;
+    }
+
+    /* Contact */
+    #contact {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 3rem;
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      margin-top: 3.5rem;
+      align-items: start;
+    }
+
+    .contact-blurb {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-top: 1rem;
+    }
+
+    .contact-links {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-link-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text2);
+      text-decoration: none;
+      padding: 0.85rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      transition: all 0.2s;
+      cursor: none;
+      letter-spacing: 0.03em;
+    }
+
+    .contact-link-item:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      background: rgba(124, 109, 250, 0.08);
+    }
+
+    .contact-link-icon {
+      font-size: 1rem;
+    }
+
+    /* Contact form */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .form-input,
+    .form-textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .form-textarea {
+      min-height: 130px;
+    }
+
+    .form-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: none;
+      transition: all 0.2s;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(124, 109, 250, 0.25);
+    }
+
+    .form-submit:hover {
+      background: var(--accent2);
+      box-shadow: 0 0 50px rgba(124, 109, 250, 0.45);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text3);
+      max-width: 100%;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media(max-width: 768px) {
+      nav {
+        padding: 1rem 1.25rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      #hero {
+        padding: 7rem 1.25rem 3rem;
+      }
+
+      .section-inner,
+      .contact-inner {
+        padding: 4rem 1.25rem;
+      }
+
+      .about-grid,
+      .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .exp-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      .exp-date {
+        text-align: left;
+      }
+
+      .exp-line-wrap {
+        display: none;
+      }
+
+      .hero-stats {
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="cursor" id="cursor">
+    <div class="cursor-dot"></div>
+  </div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Jatin<span>.</span></div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="nav-cta">Hire me →</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-inner">
+      <div class="hero-badge">Available for new opportunities</div>
+      <h1 class="hero-name">
+        Full-Stack<br><span class="accent-word">Developer</span>
+      </h1>
+      <p class="hero-title">// PHP · JavaScript · MySQL · Node.js · React · Express.js · MongoDB</p>
+      <p class="hero-desc">
+        I build production-grade web applications — from pixel-perfect frontends to robust PHP backends and MySQL
+        databases. Based in <strong>New Delhi, India</strong>, I specialize in e-commerce platforms, admin dashboards,
+        and client-facing web products.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">View Projects →</a>
+        <a href="#contact" class="btn-ghost">Get In Touch</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">1.5<span>+</span></div>
+          <div class="stat-label">YEARS EXP</div>
+        </div>
+        <div>
+          <div class="stat-num">40<span>+</span></div>
+          <div class="stat-label">WEBSITES BUILT</div>
+        </div>
+        <div>
+          <div class="stat-num">2</div>
+          <div class="stat-label">COMPANIES</div>
+        </div>
+        <div>
+          <div class="stat-num">3<span>+</span></div>
+          <div class="stat-label">INDUSTRIES</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner" id="ticker">
+      <span class="ticker-item">PHP <span class="dot">◆</span></span>
+      <span class="ticker-item">JavaScript <span class="dot">◆</span></span>
+      <span class="ticker-item">MySQL <span class="dot">◆</span></span>
+      <span class="ticker-item">HTML/CSS <span class="dot">◆</span></span>
+      <span class="ticker-item">Node.js <span class="dot">◆</span></span>
+      <span class="ticker-item">React <span class="dot">◆</span></span>
+      <span class="ticker-item">Razorpay <span class="dot">◆</span></span>
+      <span class="ticker-item">REST APIs <span class="dot">◆</span></span>
+      <span class="ticker-item">Git <span class="dot">◆</span></span>
+      <span class="ticker-item">TypeScript <span class="dot">◆</span></span>
+      <span class="ticker-item">Next.js <span class="dot">◆</span></span>
+      <span class="ticker-item">E-Commerce <span class="dot">◆</span></span>
+      <span class="ticker-item">PHP <span class="dot">◆</span></span>
+      <span class="ticker-item">JavaScript <span class="dot">◆</span></span>
+      <span class="ticker-item">MySQL <span class="dot">◆</span></span>
+      <span class="ticker-item">HTML/CSS <span class="dot">◆</span></span>
+      <span class="ticker-item">Node.js <span class="dot">◆</span></span>
+      <span class="ticker-item">React <span class="dot">◆</span></span>
+      <span class="ticker-item">Razorpay <span class="dot">◆</span></span>
+      <span class="ticker-item">REST APIs <span class="dot">◆</span></span>
+      <span class="ticker-item">Git <span class="dot">◆</span></span>
+      <span class="ticker-item">TypeScript <span class="dot">◆</span></span>
+      <span class="ticker-item">Next.js <span class="dot">◆</span></span>
+      <span class="ticker-item">E-Commerce <span class="dot">◆</span></span>
+    </div>
+  </div>
+
+  <!-- ABOUT / SKILLS -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">Crafting digital experiences<br>from idea to deployment</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>I'm Jatin, a <strong>Full-Stack Developer</strong> based in New Delhi with hands-on experience building production-grade web applications for real clients. I've worked at <strong>High Digi Tech</strong> and <strong>Crystal Web Technologies</strong>, delivering 40+ websites across e-commerce, automotive, wellness, and fintech industries.</p>
+          <p>My core strength is <strong>PHP-driven full-stack development</strong> — from building custom admin panels and dynamic backends to designing responsive, SEO-friendly frontends. I take projects from zero to live, end to end.</p>
+          <p>I also bring <strong>design skills</strong> to the table — logos, product labels, banners — using Photoshop, CorelDraw, Canva, and Figma, giving clients a complete digital solution under one roof.</p>
+          <p>Currently expanding into <strong>React.js, Node.js, and MongoDB</strong> to grow into modern full-stack architectures.</p>
+        </div>
+        <div>
+          <div class="skills-group">
+            <div class="skills-group-label">// BACKEND</div>
+            <div class="skills-pills">
+              <span class="pill highlight">PHP</span>
+              <span class="pill highlight">MySQL</span>
+              <span class="pill">Node.js</span>
+              <span class="pill">Express.js</span>
+              <span class="pill">REST APIs</span>
+              <span class="pill">Auth / Sessions</span>
+            </div>
+          </div>
+          <div class="skills-group">
+            <div class="skills-group-label">// FRONTEND</div>
+            <div class="skills-pills">
+              <span class="pill highlight">HTML</span>
+              <span class="pill highlight">CSS</span>
+              <span class="pill highlight">JavaScript</span>
+              <span class="pill">React.js</span>
+              <span class="pill">Tailwind CSS</span>
+              <span class="pill">Bootstrap</span>
+            </div>
+          </div>
+          <div class="skills-group">
+            <div class="skills-group-label">// DATABASE</div>
+            <div class="skills-pills">
+              <span class="pill highlight">MySQL</span>
+              <span class="pill">MongoDB</span>
+            </div>
+          </div>
+          <div class="skills-group">
+            <div class="skills-group-label">// CMS & TOOLS</div>
+            <div class="skills-pills">
+              <span class="pill">WordPress</span>
+              <span class="pill">Git</span>
+              <span class="pill">Figma</span>
+              <span class="pill">Photoshop</span>
+              <span class="pill">Canva</span>
+              <span class="pill">CorelDraw</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-inner">
+      <div class="section-label">Experience</div>
+      <h2 class="section-title">Where I've built<br>things that matter</h2>
+      <div class="exp-timeline">
+
+        <div class="exp-item">
+          <div class="exp-date">Apr 2025 — Mar 2026</div>
+          <div class="exp-line-wrap">
+            <div class="exp-dot"></div>
+            <div class="exp-connector"></div>
+          </div>
+          <div class="exp-content">
+            <div class="exp-role">Full Stack Developer</div>
+            <div class="exp-company">High Digi Tech · Janakpuri C1, Delhi</div>
+            <div class="exp-desc">Developed 25+ dynamic and e-commerce websites using PHP and MySQL, ensuring high performance and scalability. Built and managed custom admin panels and backend systems for multiple client projects. Implemented features like contact forms, authentication systems, and business-specific functionalities. Optimised database queries and code structure to improve website speed and efficiency. Designed logos, product labels, and shop banners — delivering visually impactful branding assets.</div>
+            <div class="exp-tags">
+              <span class="exp-tag">PHP</span><span class="exp-tag">MySQL</span><span class="exp-tag">JavaScript</span>
+              <span class="exp-tag">Admin Panels</span><span class="exp-tag">E-Commerce</span><span class="exp-tag">Branding</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-date">May 2024 — Feb 2025</div>
+          <div class="exp-line-wrap">
+            <div class="exp-dot" style="background:var(--accent3);box-shadow:0 0 10px var(--accent3)"></div>
+            <div class="exp-connector"></div>
+          </div>
+          <div class="exp-content">
+            <div class="exp-role">Full Stack Developer</div>
+            <div class="exp-company">Crystal Web Technologies · Dwarka Mor, New Delhi</div>
+            <div class="exp-desc">Developed and deployed 15+ websites including static, dynamic PHP, and WordPress solutions with responsive, SEO-optimised interfaces. Handled backend development, debugging, and performance optimisation using PHP and MySQL to ensure fast and reliable applications.</div>
+            <div class="exp-tags">
+              <span class="exp-tag">PHP</span><span class="exp-tag">MySQL</span><span class="exp-tag">WordPress</span>
+              <span class="exp-tag">HTML/CSS</span><span class="exp-tag">SEO</span><span class="exp-tag">Debugging</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-inner">
+      <div class="section-label">Projects</div>
+      <h2 class="section-title">Things I've shipped</h2>
+      <div class="projects-grid">
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">🚗</div>
+            <div class="project-links">
+              <a href="https://dwarkamotors.com" target="_blank" class="project-link" title="Live Site">↗</a>
+            </div>
+          </div>
+          <div class="project-name">Dwarka Motors — Dynamic Website</div>
+          <div class="project-desc">Dynamic PHP-based website for a luxury car business with a responsive UI. Developed a custom backend to handle inquiries and lead generation. Optimized performance and UX for faster browsing and higher conversions.</div>
+          <div class="project-stack">
+            <span class="stack-tag">PHP</span><span class="stack-tag">MySQL</span>
+            <span class="stack-tag">JavaScript</span><span class="stack-tag">Responsive UI</span><span class="stack-tag">Lead Gen</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">💡</div>
+            <div class="project-links">
+              <a href="https://highdigitech.com" target="_blank" class="project-link" title="Live Site">↗</a>
+            </div>
+          </div>
+          <div class="project-name">High Digi Tech — Company Website</div>
+          <div class="project-desc">Official company website with a custom PHP backend. Designed a responsive, SEO-friendly structure for better search visibility. Improved user experience with fast loading and intuitive navigation.</div>
+          <div class="project-stack">
+            <span class="stack-tag">PHP</span><span class="stack-tag">MySQL</span>
+            <span class="stack-tag">SEO</span><span class="stack-tag">Responsive Design</span><span class="stack-tag">CSS</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">🛒</div>
+            <div class="project-links">
+              <a href="#" class="project-link" title="Project">↗</a>
+            </div>
+          </div>
+          <div class="project-name">Digital Asset Marketplace</div>
+          <div class="project-desc">A CGTrader-inspired platform for buying and selling 3D models. Full e-commerce flow with product listings, cart, checkout, seller dashboard, and Razorpay integration. Built with a robust PHP/MySQL backend and REST API architecture.</div>
+          <div class="project-stack">
+            <span class="stack-tag">PHP</span><span class="stack-tag">MySQL</span>
+            <span class="stack-tag">JavaScript</span><span class="stack-tag">Razorpay</span><span class="stack-tag">REST API</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">👗</div>
+            <div class="project-links">
+              <a href="#" class="project-link" title="Project">↗</a>
+            </div>
+          </div>
+          <div class="project-name">FashionPanel — Admin Dashboard</div>
+          <div class="project-desc">A comprehensive dark-themed PHP admin panel for a fashion e-commerce brand. Nine complete admin pages (dashboard, orders, products, customers, inventory, categories, coupons, settings, login) with a unified CSS design system.</div>
+          <div class="project-stack">
+            <span class="stack-tag">PHP</span><span class="stack-tag">MySQL</span>
+            <span class="stack-tag">CSS Variables</span><span class="stack-tag">AJAX</span><span class="stack-tag">Admin Panel</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">🌿</div>
+            <div class="project-links">
+              <a href="#" class="project-link" title="Project">↗</a>
+            </div>
+          </div>
+          <div class="project-name">Geeta Shakti Ayurveda Platform</div>
+          <div class="project-desc">Full e-commerce website and admin panel for an Ayurvedic brand. Includes a complete frontend, dark-themed admin panel, PHP REST API router with auth guards, and a 22-table MySQL schema with Ayurvedic-specific product fields.</div>
+          <div class="project-stack">
+            <span class="stack-tag">PHP</span><span class="stack-tag">MySQL</span><span class="stack-tag">REST API</span>
+            <span class="stack-tag">Auth Guards</span><span class="stack-tag">CSS</span>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-icon">💰</div>
+            <div class="project-links">
+              <a href="#" class="project-link" title="Project">↗</a>
+            </div>
+          </div>
+          <div class="project-name">Paisa24Hours — Loan Consultancy</div>
+          <div class="project-desc">Full redesign of a New Delhi loan consultancy website. Updated all content sections including testimonials, FAQs, loan calculator, and contact form to reflect Indian financial context. Added an animated multi-step loan application modal.</div>
+          <div class="project-stack">
+            <span class="stack-tag">HTML/CSS</span><span class="stack-tag">JavaScript</span>
+            <span class="stack-tag">Loan Calculator</span><span class="stack-tag">Animations</span><span class="stack-tag">INR</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Let's build something<br>together</h2>
+      <div class="contact-layout">
+        <div>
+          <p class="contact-blurb">
+            I'm currently open to full-time roles, freelance projects, and long-term contracts. Whether you need a
+            robust PHP backend, a polished admin dashboard, or a complete e-commerce platform — I'm ready to ship.
+          </p>
+          <div class="contact-links">
+            <a href="mailto:jatinkundara101@gmail.com" class="contact-link-item">
+              <span class="contact-link-icon">✉️</span> jatinkundara101@gmail.com
+            </a>
+            <a href="tel:+919310702445" class="contact-link-item">
+              <span class="contact-link-icon">📞</span> +91-9310702445
+            </a>
+            <a href="#" class="contact-link-item">
+              <span class="contact-link-icon">🐙</span> github.com/jatin
+            </a>
+            <a href="https://linkedin.com/in/" target="_blank" class="contact-link-item">
+              <span class="contact-link-icon">💼</span> linkedin.com/in/jatin
+            </a>
+            <a href="#" class="contact-link-item">
+              <span class="contact-link-icon">📍</span> Dharampura, Najafgarh, New Delhi 110043
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="contact-form">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-input" placeholder="Rohan Sharma">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="rohan@company.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-textarea" placeholder="Tell me about your project..."></textarea>
+            </div>
+            <button class="form-submit"
+              onclick="this.textContent='Message Sent ✓'; this.style.background='var(--green)'">Send Message →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 Jatin. Designed & built by hand.</span>
+    <span style="font-family:var(--font-mono);color:var(--text3)">New Delhi · India · Available for hire</span>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.transform = `translate(${mx}px, ${my}px)`;
+    });
+    function animRing() {
+      rx += (mx - rx) * 0.14;
+      ry += (my - ry) * 0.14;
+      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+      requestAnimationFrame(animRing);
+    }
+    animRing();
+
+    document.querySelectorAll('a, button, .pill, .project-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        ring.style.width = '56px'; ring.style.height = '56px';
+        ring.style.borderColor = 'rgba(124,109,250,0.9)';
+      });
+      el.addEventListener('mouseleave', () => {
+        ring.style.width = '36px'; ring.style.height = '36px';
+        ring.style.borderColor = 'rgba(124,109,250,0.6)';
+      });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), entry.target.dataset.delay || 0);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.exp-item').forEach((el, i) => {
+      el.dataset.delay = i * 100;
+      observer.observe(el);
+    });
+
+    document.querySelectorAll('.project-card').forEach((el, i) => {
+      el.dataset.delay = (i % 3) * 80;
+      observer.observe(el);
+    });
+  </script>
+</body>
+
+</html>
